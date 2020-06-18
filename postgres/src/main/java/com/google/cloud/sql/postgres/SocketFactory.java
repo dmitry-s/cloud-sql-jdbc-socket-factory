@@ -74,16 +74,8 @@ public class SocketFactory extends javax.net.SocketFactory {
   }
 
   private static String getUserAgentString() {
-    try {
-      Properties packageInfo = new Properties();
-      packageInfo
-          .load(SocketFactory.class.getClassLoader().getResourceAsStream("project.properties"));
-      return String
-          .format("%s/%s", packageInfo.getProperty("artifactId"),
-              packageInfo.getProperty("version"));
-    } catch (IOException e) {
-      return DEFAULT_APPLICATION_NAME;
-    }
+    String version = SocketFactory.class.getPackage().getImplementationVersion();
+    return String.format("%s/%s", DEFAULT_APPLICATION_NAME, version);
   }
 
   @Override
