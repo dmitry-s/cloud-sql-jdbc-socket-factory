@@ -2,7 +2,7 @@
 [![Build
 Status](https://travis-ci.org/GoogleCloudPlatform/cloud-sql-jdbc-socket-factory.svg?branch=master)](https://travis-ci.org/GoogleCloudPlatform/cloud-sql-jdbc-socket-factory)
 
-The Cloud SQL Socket Factory is a library for the MySQL/Postgres JDBC drivers that allows a user 
+The Cloud SQL Socket Factory is a library for the MySQL/Postgres JDBC and R2DBC drivers that allows a user 
 with the appropriate permissions to connect to a Cloud SQL database without having to deal with IP 
 whitelisting or SSL certificates manually.
 
@@ -28,7 +28,7 @@ gcloud auth application-default login
 
 ### Add library as a dependency
 
-#### MySQL
+#### MySQL JDBC
 
 **Note**: Use your JDBC driver version to figure out which SocketFactory you should use. If you 
 are unsure, it is recommended to use the latest version of `mysql-connector-java:8.x`.
@@ -52,12 +52,12 @@ Include the following in the project's `pom.xml`:
 ```
 
 ##### Gradle
-Include the following the project's `build.gradle`
+Include the following in the project's `build.gradle`
 ```gradle
 compile 'com.google.cloud.sql:mysql-socket-factory-connector-j-8:1.1.0'
 ```
 
-#### PostgreSQL
+#### PostgreSQL JDBC
 
 ##### Maven
 Include the following in the project's `pom.xml`:
@@ -70,11 +70,50 @@ Include the following in the project's `pom.xml`:
 ```
 
 #### Gradle
-Include the following the project's `gradle.build`
+Include the following in the project's `gradle.build`
 ```gradle
 compile 'com.google.cloud.sql:postgres-socket-factory:1.1.0'
 ```
 [//]: # ({x-version-update-end})
+
+#### MySQL R2DBC
+
+##### Maven
+Include the following in the project's `pom.xml`:
+
+```maven-pom
+<dependency>
+    <groupId>com.google.cloud.sql</groupId>
+    <artifactId>cloud-sql-connector-r2dbc-mysql</artifactId>
+    <version>1.1.0</version>
+</dependency>
+```
+
+##### Gradle
+Include the following in the project's `build.gradle`
+```gradle
+compile 'com.google.cloud.sql:cloud-sql-connector-r2dbc-mysql:1.1.0'
+```
+
+#### Postgres R2DBC
+
+##### Maven
+Include the following in the project's `pom.xml`:
+
+```maven-pom
+<dependency>
+    <groupId>com.google.cloud.sql</groupId>
+    <artifactId>cloud-sql-connector-r2dbc-postgres</artifactId>
+    <version>1.1.0</version>
+</dependency>
+```
+
+##### Gradle
+Include the following in the project's `build.gradle`
+```gradle
+compile 'com.google.cloud.sql:cloud-sql-connector-r2dbc-postgres:1.1.0'
+```
+
 
 #### Creating the JDBC URL
 
@@ -119,6 +158,26 @@ jdbc:postgresql:///<DATABASE_NAME>?cloudSqlInstance=<INSTANCE_CONNECTION_NAME>&s
 Note: The host portion of the JDBC URL is currently unused, and has no effect on the connection process. The SocketFactory will get your instances IP address base on the provided `cloudSqlInstance` arg. 
 
 ---
+
+#### Creating the R2DBC URL
+
+##### MySQL
+
+Base JDBC URL: `r2dbc:gcp:mysql:///<USER>:<PASSWORD>@<CONNECTION_NAME>/<DATABASE_NAME>`
+
+Example:
+```
+r2dbc:gcp:mysql://user:123456@my-project:us-central1:r2dbctest/testdb
+```
+
+##### Postgres
+
+Base JDBC URL: `r2dbc:gcp:postgres:///<USER>:<PASSWORD>@<CONNECTION_NAME>/<DATABASE_NAME>`
+
+Example:
+```
+r2dbc:gcp:postgres://user:123456@my-project:us-central1:r2dbctest/testdb
+```
 
 ## Building the Drivers
 To build a fat JAR containing the JDBC driver with the bundles Socket Factory dependencies you can issue the following Maven command from the location containing the project pom.xml:
